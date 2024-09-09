@@ -1,52 +1,111 @@
-import React, { useState } from 'react';
+//--- Register.js --- 
 
-const Register = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+import { Link, useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('https://322de26c-06d4-4076-8030-b5a84eb2f546-00-3rzu1y3gzxok8.picard.replit.dev/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      });
+const Register = (props) => {
 
-      const data = await response.json();
+    const [msg, setMsg] = useState("");
+    const txtusername = useRef("");
+    const txtpassword = useRef("");
+    const txtconfirmpassword = useRef("");
+    const chkterm = useRef("");
 
-      if (data.success) {
-        alert('Registration successful!');
-      } else {
-        alert('Registration failed!');
-      }
-    } catch (error) {
-      console.error('Error registering', error);
+    let navigate = useNavigate();
+
+    const handleRegister = (e) =>{
+
+        const _function_name = "handleRegister";
+        let _msg = "";
+
+        try {
+            
+            const _uid = txtusername.current.value;
+            const _pwd = txtpassword.current.value; 
+            const _confirmpwd = txtconfirmpassword.current.value; 
+            const _chkterm = chkterm.current.checked;
+
+            if(_uid === null || _uid === undefined || _uid.trim().length === 0)
+            {
+                _msg = "* invalid username";                
+            }
+            
+            if(_pwd === null || _pwd === undefined || _pwd.trim().length === 0)
+            {
+                _msg = _msg + " * invalid password";                
+            }
+            
+            if(_confirmpwd === null || _confirmpwd === undefined || _confirmpwd.trim().length === 0)
+            {
+                _msg = _msg + " * invalid confirm password";                
+            }            
+            
+            if(_pwd !== _confirmpwd)
+            {
+                _msg = _msg + " * confirm password does not match password"; 
+            }
+            
+            if(_chkterm === false)
+            {
+                _msg = _msg + " * please select terms/services"; 
+            }
+    
+            if(_msg.length > 0)
+            {
+                setMsg(_msg)                
+                return false;
+            }
+
+            const _url = `https://322de26c-06d4-4076-8030-b5a84eb2f546-00-3rzu1y3gzxok8.picard.replit.dev/`;  
+            
+            const _post_data = {username:_uid, password:_pwd};
+
+            fetch(_url,{method:'POST',
+                headers:{'Content-type':'application/json'},
+                body:JSON.stringify(_post_data)}
+            )
+            .then((res)=>res.json())
+            .then((data)=> {
+                
+                if(data.register === true)
+                {
+                    //set login session state or cookies 
+                    //update useState - login username 
+                    props.setUser(_uid)
+                    navigate("/dashboard",{replace:true})
+                }
+
+                setMsg(data.msg)
+            })
+            .catch((error)=>{
+                setMsg("* request error");
+                console.log("* request error *");
+                console.log(error);
+            });
+
+        } catch (error) {
+            console.log(`** ${_function_name}::error *`)
+            console.log(error);
+        }
     }
-  };
 
-  return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleRegister}>
-        <input
-          type="text"
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Register</button>
-      </form>
-    </div>
-  );
-};
+    return (
+     <>
+        <p>Register Page</p>
+        <div>
+            <span>* username: </span><input type="text" ref={txtusername} maxLength={20} placeholder="* username required"/> <br/>
+            <span>* password: </span><input type="password" ref={txtpassword} maxLength={10} placeholder="* password required"/> <br/>
+            <span>* confirm password: </span><input type="password" ref={txtconfirmpassword} maxLength={10} placeholder="* confirm password required"/> <br/>
+            <p></p>
+            <input type="checkbox" ref={chkterm} /><span> Terms and Services</span>
+            <p>{msg}</p>
+            <p></p>
+            <p></p><button onClick={handleRegister}>register</button>
+        </div>
+        <p></p>
+        <Link to="/login">login</Link>
+     </>
+    )
+}
 
 export default Register;
