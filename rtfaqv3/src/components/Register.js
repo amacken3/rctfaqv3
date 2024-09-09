@@ -56,7 +56,7 @@ const Register = (props) => {
                 return false;
             }
 
-            const _url = `https://322de26c-06d4-4076-8030-b5a84eb2f546-00-3rzu1y3gzxok8.picard.replit.dev/`;  
+            const _url = `https://322de26c-06d4-4076-8030-b5a84eb2f546-00-3rzu1y3gzxok8.picard.replit.dev/register/`;  
             
             const _post_data = {username:_uid, password:_pwd};
 

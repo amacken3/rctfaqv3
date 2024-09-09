@@ -1,11 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Login from "./Login";
 
-const Home = () => {
+const Home = (props) => {
   return (
     <div>
       <h2>Welcome to the Home Page</h2>
-      <Link to="/login">Login</Link> | <Link to="/register">Register</Link>
+      <p>{props.title}</p>
+      <Login user={props.user} setUser={props.setUser}/>
+    
     </div>
   );
 };

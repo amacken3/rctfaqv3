@@ -27,7 +27,7 @@ const Login = (props) => {
             
             const _uid = txtusername.current.value;
             const _pwd = txtpassword.current.value; //optionally: encrypt password
-            const _url = `https://322de26c-06d4-4076-8030-b5a84eb2f546-00-3rzu1y3gzxok8.picard.replit.dev/${_uid}/${_pwd}`;  
+            const _url = `https://322de26c-06d4-4076-8030-b5a84eb2f546-00-3rzu1y3gzxok8.picard.replit.dev/login/${_uid}/${_pwd}`;  
 
             if(_uid === null || _uid === undefined || _uid.trim().length === 0)
             {
